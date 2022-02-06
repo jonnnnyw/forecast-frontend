@@ -13,6 +13,7 @@ const globalStyles = globalCss({
     backgroundColor: '$primary',
     fontFamily: '$primary',
     fontSize: '$md',
+    fontWeight: '$300',
   },
   'input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': {
     '-webkit-appearance': 'none',

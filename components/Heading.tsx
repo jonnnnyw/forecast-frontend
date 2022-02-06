@@ -2,7 +2,7 @@ import { styled } from '../stitches.config';
 
 const Root = styled('h1', {
   marginTop: 0,
-  fontWeight: '$500',
+  fontWeight: '$300',
   lineHeight: 1.125,
   fontFamily: '$secondary',
   overflowWrap: 'break-word',

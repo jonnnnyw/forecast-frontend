@@ -11,6 +11,7 @@ const Root = styled('input', {
   padding: '$8',
   fontFamily: '$primary',
   fontSize: '$md',
+  fontWeight: '$300',
   '&:focus': {
     outline: 'none',
     borderColor: '$accent',

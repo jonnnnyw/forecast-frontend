@@ -31,8 +31,8 @@ export const { styled, css, globalCss, keyframes, getCssText, createTheme, theme
       ...scale,
     },
     fonts: {
-      primary: 'Quattrocento, Arial, Times New Roman, serif',
-      secondary: 'Oswald, Tahoma, Arial, sans-serif',
+      primary: 'Merriweather Sans, Arial, Times New Roman, serif',
+      secondary: 'Sulphur Point, Tahoma, Arial, sans-serif',
     },
     fontSizes: {
       xxs: '0.8rem',
@@ -45,11 +45,8 @@ export const { styled, css, globalCss, keyframes, getCssText, createTheme, theme
       massive: '4rem',
     },
     fontWeights: {
-      200: '200',
       300: '300',
       400: '400',
-      500: '500',
-      600: '600',
       700: '700',
     },
     lineHeights: {

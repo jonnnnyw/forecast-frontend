@@ -8,10 +8,9 @@ import { addToArray, removeFromArray, filterDatumByTime, formatTime } from '../u
 import { styled, themes } from '../stitches.config';
 import * as Heading from '../components/Heading';
 import * as Box from '../components/Box';
-import * as Time from '../components/Time';
 import * as Filter from '../components/Filter';
 import * as ChartLine from '../components/ChartLine';
-import * as Carousel from '../components/Carousel';
+import * as TimeScroller from '../components/TimeScroller';
 
 import { Point, Query, Serie } from '../types';
 
@@ -34,7 +33,7 @@ const Title = styled(Heading.Root, {
   margin: 0,
   marginBottom: '$16',
   fontSize: '8rem',
-  fontWeight: '$600',
+  fontWeight: '$700',
   gridArea: 'title'
 });
 
@@ -78,42 +77,35 @@ const Home = ({ points }: HomeProps) => {
 
   const { t } = useTranslation('home');
 
-  const times = useRef<number[]>([]);
-
   const [data, setData] = useState<Data>({ hours: [], metrics: {}, visible: {} });
   const [locations, setLocations] = useState<string[]>([]);
+
   const [query, setQuery] = useState<Query>({
-    date: '2022-02-07T22:50:25+13:00',
+    date: new Date('2022-02-07T22:50:25+13:00'),
     lat: 58.7984,
     lng: 17.8081
   });
 
   const { forecast, isLoading, isError } = useForecast(query);
 
-  /** */
-  const handleQuery = useCallback((date: string, location: string) => {
-    if(date && location) {
-      if(locations.includes(location)) {
-        const point = points.find((point) => point.name === location);
+  const handleQuery = useCallback((date: Date, location: string) => {
+    if(locations.includes(location)) {
+      const point = points.find((point) => point.name === location);
+      if(point) {
+        setQuery({ date, lat: point.lat, lng: point.lng });
       }
     }
   }, [locations, points]);
 
-  /** */
-  const handleTime = (hour: Date, isVisible: boolean) => {
-    isVisible ? 
-      addToArray(times.current, hour.getTime()) :
-      removeFromArray(times.current, hour.getTime());
-    filterData(times.current, data);
+  const handleTime = (times: number[]) => {
+    filterData(times, data);
   };
 
-  /** */
   const filterData = useDebounce((times: number[], data: Data) => {
     const visible = filterDatumByTime(times, data.metrics);
     setData({  ...data, visible });
   }, 500, { leading: false });
   
-  /** */
   useEffect(() => {
     if(forecast && forecast.hours.length) {
       const hours = forecast.hours.map((hour) => new Date(hour.time));
@@ -126,7 +118,6 @@ const Home = ({ points }: HomeProps) => {
     }
   }, [forecast]);
 
-  /** */
   useEffect(() => {
     setLocations(points.map((point) => point.name))
   }, [points]);
@@ -142,28 +133,13 @@ const Home = ({ points }: HomeProps) => {
         <Title uppercase center>
           {t('Forecast')}
         </Title>
-        <Filter.Root 
-          locations={locations} 
-          defaultDate={query.date} 
-          defaultLocation="Raglan" 
-          onFilter={handleQuery} 
-        />
+        <Filter.Root locations={locations} defaultDate={query.date} defaultLocation="Raglan" onFilter={handleQuery} />
       </Header>
       <Main>
-        {data.hours.length ?
-          <Carousel.Root css={{ bottom: 0, position: 'fixed', zIndex: 2 }}>
-            {data.hours.map((hour) => (
-              <InView as="span" onChange={(inView) => handleTime(hour, inView)} threshold={0.1} key={hour.getTime()}>
-                <Time.Root dateTime={hour.toLocaleDateString()} size="xl" css={{ width: '25vw' }}>
-                  {formatTime(hour)}
-                </Time.Root>
-              </InView>
-            ))}
-          </Carousel.Root>
-        : ''}
+        <TimeScroller.Root hours={data.hours} onTimeChange={handleTime} />
         {data.visible?.waveHeight ?
-          <Section css={{ height: 'calc(40rem + $64 + $64)', maxWidth: '100vw' }}>
-            <Heading.Root as="h3" uppercase center>{t('Wave Height')}</Heading.Root>
+          <Section css={{ height: '40rem', maxWidth: '100vw' }}>
+            <Heading.Root as="h3" size="lg" uppercase center>{t('Wave Height')}</Heading.Root>
             <ChartLine.Root dataset={data.visible.waveHeight} />
           </Section>
         : ''}

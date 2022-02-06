@@ -1,10 +1,9 @@
-import React from 'react';
 import { styled } from '../stitches.config';
 
 const Root = styled('label', {
   display: 'block',
   fontFamily: '$secondary',
-  fontWeight: '$400',
+  fontWeight: '$300',
   padding: '0 $8',
   letterSpacing: '$1',  
   variants: {

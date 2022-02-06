@@ -4,6 +4,7 @@ import * as Box from './Box';
 import * as Input from '../components/Input';
 import * as Label from '../components/Label';
 import * as Menu from '../components/Menu';
+import * as Calendar from '../components/Calendar';
 
 import { searchArray } from '../utils/array';
 
@@ -17,23 +18,25 @@ const Filter = styled('div', {
 type FilterProps = React.ComponentPropsWithoutRef<typeof Filter> & {
   locations?: string[],
   defaultLocation?: string,
-  defaultDate?: string,
-  onFilter: (date: string, location: string) => void;
+  defaultDate?: Date,
+  onFilter: (date: Date, location: string) => void;
 };
 
 const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, locations = [], defaultLocation, defaultDate, onFilter, ...props }, ref) =>  {
 
   const [filter, setFilter] = useState({
-    date: defaultDate,
+    date: defaultDate ?? new Date(),
     location: defaultLocation
   });
 
   const [items, setItems] = useState<string[]>([]);
+  
+  const handleLocation = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilter((current) => ({ ...current, location: event.target.value }));
+  }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setFilter((current) => ({ ...current, [name]: value}));
+  const handleDate = (date: Date) => {
+    setFilter((current) => ({ ...current, date }));
   }
 
   const setLocation = (location: string) => {
@@ -56,7 +59,7 @@ const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, location
   return (<Filter ref={ref} {...props}>
     <Box.Root css={{ gridArea: 'location', position: 'relative' }}>
       <Label.Root css={{ marginBottom: '$4' }} htmlFor="location">Location</Label.Root>
-      <Input.Root name="location" id="location" onChange={handleChange} value={filter.location} autoComplete="off" uppercase />
+      <Input.Root id="location" onChange={handleLocation} value={filter.location} autoComplete="off" uppercase />
       {items.length ? 
         <Menu.Root open={true} css={{ width: '100%', marginTop: '$1' }}>
           {items.map((item, key) => (
@@ -65,9 +68,10 @@ const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, location
         </Menu.Root>
       : ''}
     </Box.Root>
-    <Box.Root css={{ gridArea: 'date' }}>
+    <Box.Root css={{ gridArea: 'date', position: 'relative' }}>
       <Label.Root css={{ marginBottom: '$4' }} htmlFor="date">Date</Label.Root>
-      <Input.Root name="date" id="date" onChange={handleChange} value={filter.date} />
+      <Input.Root id="date" value={filter.date.toLocaleDateString()} readOnly />
+      <Calendar.Root open={false} defaultValue={filter.date} onClickDay={handleDate} />
     </Box.Root>
     {children}
   </Filter>);
