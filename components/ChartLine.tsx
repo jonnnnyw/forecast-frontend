@@ -1,7 +1,6 @@
 import React from 'react';
 import { ResponsiveLine, Serie } from '@nivo/line';
-import { theme } from '../stitches.config';
-
+import { formatTime } from '../utils';
 
 export interface ChartLineProps {
   dataset: Serie;
@@ -12,12 +11,12 @@ const Root = ({ dataset }: ChartLineProps) => (
       data={[dataset]}
       xScale={{ type: 'time', format: 'native', precision: 'hour' }}
       yScale={{ type: 'linear', nice: true, min: 'auto', max: 'auto' }}
-      margin={{ top: 10, right: 10, bottom: 100, left: 50 }}
+      margin={{ top: 20, right: 10, bottom: 100, left: 60 }}
       colors={{ scheme: 'set2' }}
-      curve="cardinal"
+      curve="basis"
       lineWidth={2}
       axisBottom={{
-        format: (date: Date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
+        format: formatTime,
         tickRotation: -60,
         tickPadding: 10,
       }}

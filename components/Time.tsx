@@ -2,8 +2,11 @@ import { styled } from '../stitches.config';
 
 const Root = styled('time', {
   color: 'inherit',
+  borderRight: '$borderWidths$1 solid',
+  borderColor: 'inherit',
   fontFamily: '$secondary',
   display: 'inline-block',
+  backgroundColor: '$tertiary',
   variants: {
     size: {
       xs: {

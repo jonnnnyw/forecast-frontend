@@ -5,10 +5,12 @@ import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 const Carousel = styled('div', {
   overflow: 'hidden',
-  position: 'relative'
+  position: 'relative',
+  width: '100%'
 });
 
 const Stage = styled('div', {
+
   position: 'relative',
   display: 'inline-flex',
   flexWrap: 'nowrap',
@@ -59,7 +61,7 @@ const Root = ({ children, ...props }: CarouselProps) => {
     const rWidth = root.current?.offsetWidth ?? 0;
     const sWidth = stage.current?.offsetWidth ?? 0;
 
-    const position = Math.max(current - (rWidth/3), ((sWidth - rWidth) * -1));
+    const position = Math.max(current - (rWidth/2), ((sWidth - rWidth) * -1));
 
     if(current > position) {
        setCurrent(position);
@@ -68,7 +70,7 @@ const Root = ({ children, ...props }: CarouselProps) => {
 
   const handlePrev = () => {
     if(current < 0) {
-       setCurrent(Math.min(current + ((root.current?.offsetWidth ?? 0)/3), 0));
+       setCurrent(Math.min(current + ((root.current?.offsetWidth ?? 0)/2), 0));
     }
   };
 

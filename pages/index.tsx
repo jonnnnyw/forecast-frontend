@@ -4,7 +4,7 @@ import useTranslation from 'next-translate/useTranslation';
 import { InView } from 'react-intersection-observer';
 import { useForecast, useDebounce } from '../hooks';
 import { hoursToSerie } from '../transformers/hoursToSerie';
-import { addToArray, removeFromArray, filterDatumByTime } from '../utils';
+import { addToArray, removeFromArray, filterDatumByTime, formatTime } from '../utils';
 import { styled, themes } from '../stitches.config';
 import * as Heading from '../components/Heading';
 import * as Box from '../components/Box';
@@ -49,7 +49,7 @@ const Main = styled('main', {
 });
 
 const Section = styled('section', {
-  padding: '$64'
+  padding: '$32'
 });
 
 const Footer = styled('footer', {
@@ -83,9 +83,9 @@ const Home = ({ points }: HomeProps) => {
   const [data, setData] = useState<Data>({ hours: [], metrics: {}, visible: {} });
   const [locations, setLocations] = useState<string[]>([]);
   const [query, setQuery] = useState<Query>({
-    date: '2022-01-19T06:00:00+13:00',
-    lat: 0.23232,
-    lng: 0.2323223
+    date: '2022-02-07T22:50:25+13:00',
+    lat: 58.7984,
+    lng: 17.8081
   });
 
   const { forecast, isLoading, isError } = useForecast(query);
@@ -151,11 +151,11 @@ const Home = ({ points }: HomeProps) => {
       </Header>
       <Main>
         {data.hours.length ?
-          <Carousel.Root css={{ top: 0, position: 'sticky' }}>
+          <Carousel.Root css={{ bottom: 0, position: 'fixed', zIndex: 2 }}>
             {data.hours.map((hour) => (
-              <InView as="span" onChange={(inView) => handleTime(hour, inView)} threshold={0.5} key={hour.getTime()}>
-                <Time.Root dateTime={hour.toLocaleDateString()} size="xl" css={{ width: '20vw' }}>
-                  {hour.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+              <InView as="span" onChange={(inView) => handleTime(hour, inView)} threshold={0.1} key={hour.getTime()}>
+                <Time.Root dateTime={hour.toLocaleDateString()} size="xl" css={{ width: '25vw' }}>
+                  {formatTime(hour)}
                 </Time.Root>
               </InView>
             ))}
@@ -175,12 +175,8 @@ const Home = ({ points }: HomeProps) => {
 
 export async function getStaticProps() {
   
-  const points: Point[] = [
-    {name: 'Raglan', lat: 1.2323, lng: 1.234343},
-    {name: 'Raglan Bay', lat: 1.2323, lng: 1.234343},
-    {name: 'Tauranga', lat: 1.2323, lng: 1.234343},
-    {name: 'Tauranga Bay', lat: 1.2323, lng: 1.234343},
-  ];
+  const result = await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/points.json`);
+  const points: Point[] = await result.json();
 
   return {
     props: {
