@@ -24,8 +24,9 @@ export interface Meta {
 }
 
 export interface Hours {
-  readonly time: string; 
-  readonly [index: string]: Sources | string;
+  // @ts-ignore
+  readonly time: string;
+  readonly [index: string]: Sources;
 }
 
 export interface Sources {
