@@ -3,8 +3,9 @@ import Head from 'next/head';
 import useTranslation from 'next-translate/useTranslation';
 import { useForecast, useDebounce } from '../hooks';
 import { hoursToSerie } from '../transformers/hoursToSerie';
-import { filterDatumByTime } from '../utils';
+import { filterDatumByTime, formatDate } from '../utils';
 import { styled, themes } from '../stitches.config';
+import * as BaseLabel from '@radix-ui/react-label';
 import * as Heading from '../components/Heading';
 import * as Box from '../components/Box';
 import * as Filter from '../components/Filter';
@@ -44,7 +45,7 @@ const Header = styled('header', {
 const Main = styled('main', {
   gridArea: 'main',
   backgroundColor: '$secondary',
-  paddingBottom: '$64'
+  paddingBottom: '$128'
 });
 
 const Section = styled('section', {
@@ -60,6 +61,17 @@ const Footer = styled('footer', {
   textTransform: 'uppercase',
   letterSpacing: '$2',
   padding: '$16',
+});
+
+const Label = styled(BaseLabel.Root, {
+  display: 'block',
+  marginTop: '$4',
+  textAlign: 'center',
+  '> span': {
+    fontSize: '$sm', 
+    marginBottom: '$4',
+    display: 'block', 
+  }
 });
 
 type HomeProps = {
@@ -81,7 +93,8 @@ const Home = ({ points }: HomeProps) => {
   const [locations, setLocations] = useState<string[]>([]);
 
   const [query, setQuery] = useState<Query>({
-    date: new Date('2022-02-07T22:50:25+13:00'),
+    name: 'Raglan',
+    date: new Date(),
     lat: 58.7984,
     lng: 17.8081
   });
@@ -92,7 +105,7 @@ const Home = ({ points }: HomeProps) => {
     if(locations.includes(location)) {
       const point = points.find((point) => point.name === location);
       if(point) {
-        setQuery({ date, lat: point.lat, lng: point.lng });
+        setQuery({ date, ...point });
       }
     }
   }, [locations, points]);
@@ -133,10 +146,17 @@ const Home = ({ points }: HomeProps) => {
         <Title uppercase center>
           {t('Forecast')}
         </Title>
-        <Filter.Root locations={locations} defaultDate={query.date} defaultLocation="Raglan" onFilter={handleQuery} />
+        <Filter.Root locations={locations} defaultDate={query.date} defaultLocation={query.name} onFilter={handleQuery} />
       </Header>
       <Main>
-        <TimeScroller.Root hours={data.hours} onTimeChange={handleTime} />
+        <TimeScroller.Root id="time" hours={data.hours} onTimeChange={handleTime}>
+          <Label htmlFor="time">
+            <Box.Root as="span">{query.name}</Box.Root>
+            <time dateTime={query.date.toLocaleDateString()}>
+              {formatDate(query.date)}
+            </time>
+          </Label>
+        </TimeScroller.Root>
         {data.visible?.waveHeight ?
           <Section css={{ height: '40rem', maxWidth: '100vw' }}>
             <Heading.Root as="h3" size="lg" uppercase center>{t('Wave Height')}</Heading.Root>

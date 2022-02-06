@@ -6,6 +6,7 @@ export interface Point {
 }
  
 export interface Query {
+  name: string;
   date: Date;
   lat: number;
   lng: number

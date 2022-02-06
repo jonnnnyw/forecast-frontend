@@ -1,7 +1,6 @@
 import React from 'react';
 import { styled } from '../stitches.config';
 import * as BaseSlider from '@radix-ui/react-slider';
-import * as BaseLabel from '@radix-ui/react-label';
 
 const Slider = styled(BaseSlider.Root, {
   position: 'relative',
@@ -47,35 +46,20 @@ const Thumb = styled(BaseSlider.Thumb, {
   '&:focus': { boxShadow: '0 0 0 $sizes$2 $colors$accent' },
 });
 
-const Label = styled(BaseLabel.Root, {
-  textTransform: 'uppercase',
-  textAlign: 'center',
-  display: 'block',
-  marginTop: '$4'
-});
+type SliderProps = React.ComponentPropsWithoutRef<typeof Slider>;
 
-type SliderProps = React.ComponentPropsWithoutRef<typeof BaseSlider.Slider> & {
-  id: string;
-  label?: string;
-};
-
-const Root = React.forwardRef<HTMLDivElement, SliderProps>(({ id, label, ...props }, ref) => {
+const Root = React.forwardRef<HTMLDivElement, SliderProps>(({ ...props }, ref) => {
   const value = props.value || props.defaultValue || [];
 
   return (
-    <React.Fragment>
-      <Slider {...props} id={id} ref={ref}>
-        <Track>
-          <Range />
-        </Track>
-        {value.map((_, i) => (
-          <Thumb key={i} />
-        ))}
-      </Slider>
-      {label ?
-        <Label htmlFor={id}>{label}</Label>
-      : ''}
-    </React.Fragment>
+    <Slider {...props} ref={ref}>
+      <Track>
+        <Range />
+      </Track>
+      {value.map((_, i) => (
+        <Thumb key={i} />
+      ))}
+    </Slider>
   );
 });
 

@@ -18,10 +18,10 @@ const TimeScroller = styled('div', {
 
 type TimeScrollerProps = React.ComponentPropsWithoutRef<typeof TimeScroller> & {
   hours: Date[],
-  onTimeChange?: (times: number[]) => void
+  onTimeChange?: (times: number[]) => void,
 };
 
-const Root = ({ hours, onTimeChange, ...props }: TimeScrollerProps) =>  {
+const Root = ({ children, hours, onTimeChange, ...props }: TimeScrollerProps) =>  {
 
   const times = useRef<number[]>([]);
   const [scale, setScale] = useState<number>(10);
@@ -49,14 +49,15 @@ const Root = ({ hours, onTimeChange, ...props }: TimeScrollerProps) =>  {
       <Carousel.Root>
         {hours.map((hour) => (
           <InView as="span" onChange={(inView) => handleTime(hour, inView)} threshold={0.1} key={hour.getTime()}>
-            <Time.Root dateTime={hour.toLocaleDateString()} size="xl" css={{ width: `${scale}vw` }}>
+            <Time.Root dateTime={hour.toLocaleDateString()} size="xl" css={{ width: `${scale}rem` }}>
               {formatTime(hour)}
             </Time.Root>
           </InView>
         ))}
       </Carousel.Root>
       <Box.Root css={{ padding: '$16', width: '50vw', margin: '0 auto' }}>
-        <Slider.Root id="time" label="Time" min={10} max={25} defaultValue={[scale]} onValueChange={handleScale} />
+        <Slider.Root id="time" min={10} max={25} defaultValue={[scale]} onValueChange={handleScale} />
+        {children}
       </Box.Root>
     </TimeScroller>
   );

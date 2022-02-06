@@ -29,12 +29,10 @@ const Button = styled('button', {
   padding: '$8',
   fontSize: '$sm',
   textTransform: 'uppercase',
-  opacity: 0.9,
   '&:hover': {
     color: '$contrast',
     backgroundColor: '$highlight',
     cursor: 'pointer',
-    opacity: 1.0,
   },
   variants: {
     position: {
@@ -81,9 +79,11 @@ const Root = ({ children, ...props }: CarouselProps) => {
       <Stage ref={stage}>
         {children}
       </Stage>
-      <Button type="button" onClick={handlePrev} position="left" aria-label="Previous">
-        <MdChevronLeft /> Past
-      </Button>
+      { current < 0 ?
+          <Button type="button" onClick={handlePrev} position="left" aria-label="Previous">
+            <MdChevronLeft /> Past
+          </Button>
+      : ''}
       <Button type="button" onClick={handleNext} position="right" aria-label="Next">
         Future <MdChevronRight />
       </Button>

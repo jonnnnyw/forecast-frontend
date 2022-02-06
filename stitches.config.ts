@@ -8,6 +8,7 @@ const scale: { [index: number]: string } = {
   16: '1.6rem',
   32: '3.2rem',
   64: '6.4rem',
+  128: '12.8rem',
 };
 
 export const { styled, css, globalCss, keyframes, getCssText, createTheme, theme, config } = createStitches({
