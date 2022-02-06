@@ -8,6 +8,7 @@ import { styled, themes } from '../stitches.config';
 import * as BaseLabel from '@radix-ui/react-label';
 import * as Heading from '../components/Heading';
 import * as Box from '../components/Box';
+import * as Image from '../components/Image';
 import * as Filter from '../components/Filter';
 import * as ChartLine from '../components/ChartLine';
 import * as TimeScroller from '../components/TimeScroller';
@@ -37,9 +38,16 @@ const Title = styled(Heading.Root, {
   gridArea: 'title'
 });
 
+const Logo = styled(Image.Root, {
+  width: '10rem',
+  margin: '0 auto',
+  marginBottom: '$8'
+});
+
 const Header = styled('header', {
   gridArea: 'header',
   alignSelf: 'center',
+  padding: '$64 $16'
 });
 
 const Main = styled('main', {
@@ -143,6 +151,7 @@ const Home = ({ points }: HomeProps) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
       </Head>
       <Header>
+        <Logo src="/image/waves.svg" width="auto" height="auto" alt="Forecast" />
         <Title uppercase center>
           {t('Forecast')}
         </Title>
@@ -163,6 +172,12 @@ const Home = ({ points }: HomeProps) => {
             <ChartLine.Root dataset={data.visible.waveHeight} />
           </Section>
         : ''}
+        <Section>
+          <Heading.Root as="h3" size="lg" uppercase center>{t('Temperature')}</Heading.Root>
+        </Section>
+        <Section>
+          <Heading.Root as="h3" size="lg" uppercase center>{t('Wind')}</Heading.Root>
+        </Section>
       </Main>
       <Footer>{t('Forecast')}</Footer>
     </Layout>

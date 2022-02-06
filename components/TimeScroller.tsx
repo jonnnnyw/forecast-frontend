@@ -55,7 +55,7 @@ const Root = ({ children, hours, onTimeChange, ...props }: TimeScrollerProps) =>
           </InView>
         ))}
       </Carousel.Root>
-      <Box.Root css={{ padding: '$16', width: '50vw', margin: '0 auto' }}>
+      <Box.Root css={{ padding: '$16', width: '100vw', margin: '0 auto', '@bp2': { width: '50vw' } }}>
         <Slider.Root id="time" min={10} max={25} defaultValue={[scale]} onValueChange={handleScale} />
         {children}
       </Box.Root>

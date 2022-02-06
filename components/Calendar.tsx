@@ -2,8 +2,6 @@ import React from 'react';
 import { styled } from '../stitches.config';
 import RootCalendar from 'react-calendar';
 
-import 'react-calendar/dist/Calendar.css';
-
 const Calendar = styled('div', {
   position: 'absolute',
   zIndex: 2,

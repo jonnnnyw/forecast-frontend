@@ -1,4 +1,6 @@
 {
   "Forecast": "Forecast",
-  "Wave Height": "Wave Height"
+  "Wave Height": "Wave Height",
+  "Temperature": "Temperature",
+  "Wind": "Wind"
 }

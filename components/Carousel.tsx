@@ -51,37 +51,38 @@ const Root = ({ children, scale = 1, ...props }: CarouselProps) => {
   const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
 
-  const [current, setCurrent] = useState(0);
+  const [position, setPosition] = useState({ start: 0, end: 0, current: 0 });
 
   const handleNext = () => {
     const rWidth = root.current?.offsetWidth ?? 0;
     const sWidth = stage.current?.offsetWidth ?? 0;
 
-    const position = Math.max(current - (rWidth/2), ((sWidth - rWidth) * -1));
+    const next = Math.max(position.current - (rWidth/2), ((sWidth - rWidth) * -1));
 
-    if(current > position) {
-       setCurrent(position);
+    if(position.current > next) {
+      setPosition((position) => ({...position, current: next }));
     }
   };
 
   const handlePrev = () => {
-    if(current < 0) {
-       setCurrent(Math.min(current + ((root.current?.offsetWidth ?? 0)/2), 0));
+    if(position.current < 0) {
+      const prev = Math.min(position.current  + ((root.current?.offsetWidth ?? 0)/2), 0);
+      setPosition((position) => ({...position, current: prev }));
     }
   };
 
   const handleResize = useCallback(() => {
     if(stage.current && root.current) {
-      const max = (stage.current.offsetWidth - root.current.offsetWidth) * -1;
-      setCurrent((current) => current < max ? max : current);
+      const end = (stage.current.offsetWidth - root.current.offsetWidth) * -1;
+      setPosition((position) => ({ ...position, current: position.current < end ? end : position.current, end: end }));
     }
   }, []);
 
   useEffect(() => {
     if(stage.current) {
-      stage.current.style.left = `${current}px`;
+      stage.current.style.left = `${position.current}px`;
     }
-  }, [current]);
+  }, [position]);
 
   useEffect(() => {
     if(stage.current && root.current) {
@@ -99,14 +100,16 @@ const Root = ({ children, scale = 1, ...props }: CarouselProps) => {
       <Stage ref={stage}>
         {children}
       </Stage>
-      { current < 0 ?
+      { position.current < position.start ?
           <Button type="button" onClick={handlePrev} position="left" aria-label="Previous">
             <MdChevronLeft /> Past
           </Button>
       : ''}
+      { position.current > position.end  ?
       <Button type="button" onClick={handleNext} position="right" aria-label="Next">
         Future <MdChevronRight />
       </Button>
+      : '' }
     </Carousel>
   );
 };

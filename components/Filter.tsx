@@ -9,10 +9,15 @@ import * as Calendar from '../components/Calendar';
 import { searchArray } from '../utils/array';
 
 const Filter = styled('div', {
-  gap: '$32',
+  gap: '$16',
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  gridTemplateAreas: '"location date"',
+  gridTemplateColumns: '1fr',
+  gridTemplateAreas: '"location" "date"',
+  '@bp2': {
+    gap: '$32',
+    gridTemplateColumns: '1fr 1fr',
+    gridTemplateAreas: '"location date"',
+  }
 });
 
 type FilterProps = React.ComponentPropsWithoutRef<typeof Filter> & {
@@ -76,7 +81,7 @@ const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, location
 
   return (<Filter ref={ref} {...props}>
     <Box.Root css={{ gridArea: 'location', position: 'relative' }}>
-      <Label.Root htmlFor="location" css={{ marginBottom: '$4' }}>Location</Label.Root>
+      <Label.Root htmlFor="location" css={{ marginBottom: '$8' }}>Location</Label.Root>
       <Input.Root 
         id="location" 
         value={filter.location} 
@@ -94,7 +99,7 @@ const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, location
       : ''}
     </Box.Root>
     <Box.Root css={{ gridArea: 'date', position: 'relative' }}>
-      <Label.Root css={{ marginBottom: '$4' }} htmlFor="date">Date</Label.Root>
+      <Label.Root css={{ marginBottom: '$8' }} htmlFor="date">Date</Label.Root>
       <Input.Root id="date" value={filter.date.toLocaleDateString()} onClick={() => setActive('calendar')} readOnly />
       <Calendar.Root open={active === 'calendar'} defaultValue={filter.date} onClickDay={setDate} />
     </Box.Root>
