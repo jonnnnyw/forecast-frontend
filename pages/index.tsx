@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import useTranslation from 'next-translate/useTranslation';
-import { InView } from 'react-intersection-observer';
 import { useForecast, useDebounce } from '../hooks';
 import { hoursToSerie } from '../transformers/hoursToSerie';
-import { addToArray, removeFromArray, filterDatumByTime, formatTime } from '../utils';
+import { filterDatumByTime } from '../utils';
 import { styled, themes } from '../stitches.config';
 import * as Heading from '../components/Heading';
 import * as Box from '../components/Box';
@@ -45,6 +44,7 @@ const Header = styled('header', {
 const Main = styled('main', {
   gridArea: 'main',
   backgroundColor: '$secondary',
+  paddingBottom: '$64'
 });
 
 const Section = styled('section', {
@@ -144,7 +144,7 @@ const Home = ({ points }: HomeProps) => {
           </Section>
         : ''}
       </Main>
-      <Footer>Forecast</Footer>
+      <Footer>{t('Forecast')}</Footer>
     </Layout>
   );
 };

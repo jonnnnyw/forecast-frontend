@@ -12,6 +12,9 @@ const Root = styled('input', {
   fontFamily: '$primary',
   fontSize: '$md',
   fontWeight: '$300',
+  '&:hover': {
+    cursor: 'pointer'
+  },
   '&:focus': {
     outline: 'none',
     borderColor: '$accent',

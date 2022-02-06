@@ -10,7 +10,6 @@ const Carousel = styled('div', {
 });
 
 const Stage = styled('div', {
-
   position: 'relative',
   display: 'inline-flex',
   flexWrap: 'nowrap',
@@ -19,26 +18,23 @@ const Stage = styled('div', {
 });
 
 const Button = styled('button', {
-  position: 'absolute',
-  border: 'none',
-  borderRadius: '99999999px',
-  transform: 'translateY(-50%)',
+  all: 'unset',
   zIndex: 2,
   top: '50%',
-  width: 'calc($32 + $16)',
-  height: 'calc($32 + $16)',
+  position: 'absolute',
+  borderRadius: '$4',
   color: '$primary',
+  transform: 'translateY(-50%)',
   backgroundColor: '$contrast',
+  padding: '$8',
+  fontSize: '$sm',
+  textTransform: 'uppercase',
   opacity: 0.9,
   '&:hover': {
     color: '$contrast',
     backgroundColor: '$highlight',
     cursor: 'pointer',
     opacity: 1.0,
-  },
-  '> svg': {
-    width: '$32',
-    height: '$32',
   },
   variants: {
     position: {
@@ -86,10 +82,10 @@ const Root = ({ children, ...props }: CarouselProps) => {
         {children}
       </Stage>
       <Button type="button" onClick={handlePrev} position="left" aria-label="Previous">
-        <MdChevronLeft />
+        <MdChevronLeft /> Past
       </Button>
       <Button type="button" onClick={handleNext} position="right" aria-label="Next">
-        <MdChevronRight />
+        Future <MdChevronRight />
       </Button>
     </Carousel>
   );

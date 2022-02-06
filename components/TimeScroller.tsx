@@ -1,14 +1,19 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import { formatTime, addToArray, removeFromArray } from '../utils';
+import { useThrottle } from '../hooks';
 import { styled } from '../stitches.config';
 import * as Time from './Time';
 import * as Carousel from './Carousel';
+import * as Box from './Box';
+import * as Slider from './Slider';
 
-const TimeScroller = styled(Carousel.Root, {
+const TimeScroller = styled('div', {
   bottom: 0, 
   zIndex: 2,
-  position: 'fixed'
+  position: 'fixed',
+  width: '100%',
+  backgroundColor: '$tertiary',
 });
 
 type TimeScrollerProps = React.ComponentPropsWithoutRef<typeof TimeScroller> & {
@@ -19,6 +24,7 @@ type TimeScrollerProps = React.ComponentPropsWithoutRef<typeof TimeScroller> & {
 const Root = ({ hours, onTimeChange, ...props }: TimeScrollerProps) =>  {
 
   const times = useRef<number[]>([]);
+  const [scale, setScale] = useState<number>(10);
 
   const handleTime = (hour: Date, isVisible: boolean) => {
     isVisible ? 
@@ -30,22 +36,31 @@ const Root = ({ hours, onTimeChange, ...props }: TimeScrollerProps) =>  {
     }
   };
 
+  const handleScale = useThrottle((values: number[]) => {
+    setScale(values[0] ?? 10);
+  }, 100);
+
   if(!hours.length) {
     return null;
   }
 
   return (
-    <TimeScroller {...props}>
-      {hours.map((hour) => (
-        <InView as="span" onChange={(inView) => handleTime(hour, inView)} threshold={0.1} key={hour.getTime()}>
-          <Time.Root dateTime={hour.toLocaleDateString()} size="xl" css={{ width: '25vw' }}>
-            {formatTime(hour)}
-          </Time.Root>
-        </InView>
-      ))}
+    <TimeScroller { ...props }>
+      <Carousel.Root>
+        {hours.map((hour) => (
+          <InView as="span" onChange={(inView) => handleTime(hour, inView)} threshold={0.1} key={hour.getTime()}>
+            <Time.Root dateTime={hour.toLocaleDateString()} size="xl" css={{ width: `${scale}vw` }}>
+              {formatTime(hour)}
+            </Time.Root>
+          </InView>
+        ))}
+      </Carousel.Root>
+      <Box.Root css={{ padding: '$16', width: '50vw', margin: '0 auto' }}>
+        <Slider.Root id="time" label="Time" min={10} max={25} defaultValue={[scale]} onValueChange={handleScale} />
+      </Box.Root>
     </TimeScroller>
   );
-};
+};  
 
 Root.displayName = 'TimeScroller';
 

@@ -6,7 +6,6 @@ const Root = styled('time', {
   borderColor: 'inherit',
   fontFamily: '$secondary',
   display: 'inline-block',
-  backgroundColor: '$tertiary',
   variants: {
     size: {
       xs: {
@@ -19,24 +18,30 @@ const Root = styled('time', {
       },
       md: {
         fontSize: '$md',
-        padding: '$16',
+        padding: '$8',
       },
       lg: {
         fontSize: '$lg',
-        padding: '$16',
+        padding: '$8',
       },
       xl: {
         fontSize: '$xl',
-        padding: '$32',
+        padding: '$16',
       },
       xxl: {
         fontSize: '$xxl',
-        padding: '$32',
+        padding: '$16',
       },
+    },
+    align: {
+      center: { textAlign: 'center' },
+      left: { textAlign: 'left' },
+      right: { textAlign: 'right' }
     }
   },
   defaultVariants: {
     size: 'md',
+    align: 'right'
   },
 });
 
