@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { styled } from '../stitches.config';
 
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
@@ -42,9 +42,11 @@ const Button = styled('button', {
   }
 });
 
-type CarouselProps = React.ComponentPropsWithoutRef<typeof Carousel>;
+type CarouselProps = React.ComponentPropsWithoutRef<typeof Carousel> & {
+  scale?: number;
+};
 
-const Root = ({ children, ...props }: CarouselProps) => {
+const Root = ({ children, scale = 1, ...props }: CarouselProps) => {
 
   const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -68,11 +70,29 @@ const Root = ({ children, ...props }: CarouselProps) => {
     }
   };
 
+  const handleResize = useCallback(() => {
+    if(stage.current && root.current) {
+      const max = (stage.current.offsetWidth - root.current.offsetWidth) * -1;
+      setCurrent((current) => current < max ? max : current);
+    }
+  }, []);
+
   useEffect(() => {
     if(stage.current) {
       stage.current.style.left = `${current}px`;
     }
-  }, [current])
+  }, [current]);
+
+  useEffect(() => {
+    if(stage.current && root.current) {
+      handleResize();
+    }
+  }, [scale, handleResize]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleResize])
 
   return (
     <Carousel ref={root} {...props}>

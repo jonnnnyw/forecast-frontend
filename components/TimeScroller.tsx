@@ -46,7 +46,7 @@ const Root = ({ children, hours, onTimeChange, ...props }: TimeScrollerProps) =>
 
   return (
     <TimeScroller { ...props }>
-      <Carousel.Root>
+      <Carousel.Root scale={scale}>
         {hours.map((hour) => (
           <InView as="span" onChange={(inView) => handleTime(hour, inView)} threshold={0.1} key={hour.getTime()}>
             <Time.Root dateTime={hour.toLocaleDateString()} size="xl" css={{ width: `${scale}rem` }}>
