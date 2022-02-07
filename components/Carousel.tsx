@@ -91,8 +91,9 @@ const Root = ({ children, scale = 1, ...props }: CarouselProps) => {
   }, [scale, handleResize]);
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const resize = () => handleResize();
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
   }, [handleResize])
 
   return (

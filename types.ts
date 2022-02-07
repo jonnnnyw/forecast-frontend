@@ -25,9 +25,12 @@ export interface Meta {
 }
 
 export interface Hours {
-  // @ts-ignore
   readonly time: string;
-  readonly [index: string]: Sources;
+  readonly waveHeight?: Sources;
+  readonly airTemperature?: Sources;
+  readonly waterTemperature?: Sources;
+  readonly windDirection?: Sources;
+  readonly windSpeed?: Sources;
 }
 
 export interface Sources {
@@ -45,4 +48,18 @@ export interface Serie {
 export interface Datum {
   readonly x: Date;
   readonly y: number | string;
+}
+
+export interface Range {
+  data: { a: number, b: number, time: Date }[];
+  boundaries: {
+    a: Boundary;
+    b: Boundary;
+  }
+}
+
+export interface Boundary {
+  min: number;
+  max: number;
+  range: number;
 }

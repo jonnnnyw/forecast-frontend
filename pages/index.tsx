@@ -10,6 +10,7 @@ import * as Heading from '../components/Heading';
 import * as Box from '../components/Box';
 import * as Image from '../components/Image';
 import * as Filter from '../components/Filter';
+import * as ChartBar from '../components/ChartBar';
 import * as ChartLine from '../components/ChartLine';
 import * as TimeScroller from '../components/TimeScroller';
 
@@ -130,11 +131,15 @@ const Home = ({ points }: HomeProps) => {
   useEffect(() => {
     if(forecast && forecast.hours.length) {
       const hours = forecast.hours.map((hour) => new Date(hour.time));
+      
       const waveHeight = hoursToSerie(forecast.hours, 'waveHeight', 'meteo');
+      const airTemperature = hoursToSerie(forecast.hours, 'airTemperature', 'noaa');
+      const waterTemperature = hoursToSerie(forecast.hours, 'waterTemperature', 'noaa');
+
       setData({
         hours,
-        metrics: { waveHeight },
-        visible: { waveHeight }
+        metrics: { waveHeight, airTemperature, waterTemperature },
+        visible: { waveHeight, airTemperature, waterTemperature }
       });
     }
   }, [forecast]);
@@ -172,9 +177,12 @@ const Home = ({ points }: HomeProps) => {
             <ChartLine.Root dataset={data.visible.waveHeight} />
           </Section>
         : ''}
-        <Section>
-          <Heading.Root as="h3" size="lg" uppercase center>{t('Temperature')}</Heading.Root>
-        </Section>
+        {data.visible?.airTemperature && data.visible?.waterTemperature ?
+          <Section>
+            <Heading.Root as="h3" size="lg" uppercase center>{t('Temperature')}</Heading.Root>
+            <ChartBar.Root labelA="Air" datasetA={data.visible.airTemperature} labelB="Water" datasetB={data.visible.waterTemperature} />
+          </Section>
+        : ''}
         <Section>
           <Heading.Root as="h3" size="lg" uppercase center>{t('Wind')}</Heading.Root>
         </Section>
