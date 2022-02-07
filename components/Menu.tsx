@@ -2,6 +2,7 @@ import React from 'react';
 import { styled } from '../stitches.config';
 
 const Menu = styled('nav', {
+  zIndex: 3,
   color: '$primary',
   position: 'absolute',
   backgroundColor: '$contrast',
