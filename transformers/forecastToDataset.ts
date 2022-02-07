@@ -19,5 +19,5 @@ export const forecastToDataset = (forecast: Forecast): Dataset => {
     windDirection 
   };
 
-  return { hours, metrics, visible: metrics };
+  return { hours, metrics, filtered: metrics };
 }

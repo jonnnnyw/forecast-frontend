@@ -6,7 +6,7 @@ import { getSiblingMonths, isInDateRange } from '../utils';
 import { max } from 'lodash';
 
 const Calendar = styled('div', {
-  zIndex: 2,
+  zIndex: 3,
   gap: '$8 $4',
   width: '100%',
   padding: '$16',

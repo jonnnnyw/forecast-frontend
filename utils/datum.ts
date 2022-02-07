@@ -6,21 +6,16 @@ type Data = {
 
 /**
  * Filter datum in a serie 
- * by time.
+ * by hour.
  */
-export const filterDatumByTime = (times: number[], data: Data): Data => {
-
-  if(!times.length) {
-    return data;
-  }
-
+export const filterDatumByHour = (times: number[], data: Data): Data => {
   const filtered: Data = {};
   for (const [key, serie] of Object.entries(data)) {
     filtered[key] = {
       id: serie.id,
-      data: serie.data.filter(({ x }) => times.includes(x.getTime()))
+      data: serie.data.filter(({ x }) => times.includes(x.getUTCHours()))
     }
   }
-  
+
   return filtered;
 }

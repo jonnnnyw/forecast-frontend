@@ -3,14 +3,14 @@ import Head from 'next/head';
 import useTranslation from 'next-translate/useTranslation';
 import { useForecast, useDebounce } from '../hooks';
 import { forecastToDataset } from '../transformers';
-import { filterDatumByTime, formatDate } from '../utils';
+import { filterDatumByHour, formatDate } from '../utils';
 import { styled, themes } from '../stitches.config';
 import * as BaseLabel from '@radix-ui/react-label';
 import { Bars } from  'react-loader-spinner';
 import * as Heading from '../components/Heading';
 import * as Box from '../components/Box';
 import * as Image from '../components/Image';
-import * as Filter from '../components/Filter';
+import * as Search from '../components/Search';
 import * as ChartBar from '../components/ChartBar';
 import * as ChartLine from '../components/ChartLine';
 import * as ChartDial from '../components/ChartDial';
@@ -96,6 +96,10 @@ type HomeProps = {
   points: Point[]
 };
 
+type Filter = {
+  times: number[]
+};
+
 const Home = ({ points }: HomeProps) => {
   globalStyles();
 
@@ -103,11 +107,13 @@ const Home = ({ points }: HomeProps) => {
 
   const [locations, setLocations] = useState<string[]>([]);
   const [query, setQuery] = useState<Query>({ ...points[0], date: new Date() });
-  const [data, setData] = useState<Dataset>({ hours: [], metrics: {}, visible: {} });
+  const [data, setData] = useState<Dataset>({ hours: [], metrics: {}, filtered: {} });
+
+  const filter = useRef<Filter>({ times: [] });
 
   const { forecast, isLoading, isError } = useForecast(query);
 
-  const handleQuery = useCallback((date: Date, location: string) => {
+  const handleSearch = useCallback((date: Date, location: string) => {
     if(locations.includes(location)) {
       const point = points.find((point) => point.name === location);
       if(point) {
@@ -116,21 +122,21 @@ const Home = ({ points }: HomeProps) => {
     }
   }, [locations, points]);
 
-  const handleTime = (times: number[]) => {
-    filterData(times, data);
+  const handleFilter = (times: number[]) => {
+    filter.current.times = times;
+    filterData(filter.current, data);
   };
 
-  const filterData = useDebounce((times: number[], data: Dataset) => {
-    const visible = filterDatumByTime(times, data.metrics);
-    setData({ ...data, visible });
-  }, 500, { leading: false });
+  const filterData = useDebounce((filter: Filter, data: Dataset) => {
+      const filtered = filter.times.length ? filterDatumByHour(filter.times, data.metrics) : data.metrics;
+      setData({ ...data, filtered });
+  }, 200);
   
   useEffect(() => {
     if(forecast) {
-      const data = forecastToDataset(forecast);
-      setData(data);
+      filterData(filter.current, forecastToDataset(forecast));
     }
-  }, [forecast]);
+  }, [forecast, filterData]);
 
   useEffect(() => {
     setLocations(points.map((point) => point.name))
@@ -148,10 +154,10 @@ const Home = ({ points }: HomeProps) => {
         <Title uppercase center>
           {t('Forecast')}
         </Title>
-        <Filter.Root locations={locations} defaultDate={query.date} maxDate={maxDate} defaultLocation={query.name} onFilter={handleQuery} />
+        <Search.Root locations={locations} defaultDate={query.date} maxDate={maxDate} defaultLocation={query.name} onSearch={handleSearch} />
       </Header>
       <Main>
-        <TimeScroller.Root id="time" hours={data.hours} onTimeChange={handleTime}>
+        <TimeScroller.Root id="time" hours={data.hours} onTimeChange={handleFilter}>
           { isLoading || isError ?
             <Label css={{ textTransform: 'uppercase', color: isError ? 'red' : '$contrast' }}>
                 <Bars height="20" width="300" color="rgb(102,194,165)" ariaLabel="loading" />
@@ -165,22 +171,22 @@ const Home = ({ points }: HomeProps) => {
             </Label>
           }
         </TimeScroller.Root>
-        {data.visible?.waveHeight ?
-          <Section css={{ height: '40rem', maxWidth: '100vw' }}>
+        {data.filtered?.waveHeight ?
+          <Section css={{ height: '60rem', maxWidth: '100vw' }}>
             <Heading.Root as="h3" size="lg" uppercase center>{t('Wave Height')}</Heading.Root>
-            <ChartLine.Root dataset={data.visible.waveHeight} />
+            <ChartLine.Root dataset={data.filtered.waveHeight} />
           </Section>
         : ''}
-        {data.visible?.airTemperature && data.visible?.waterTemperature ?
+        {data.filtered?.airTemperature && data.filtered?.waterTemperature ?
           <Section css={{ backgroundColor: '$primary' }}>
             <Heading.Root as="h3" size="lg" uppercase center>{t('Temperature')}</Heading.Root>
-            <ChartBar.Root labelA="Air" datasetA={data.visible.airTemperature} labelB="Water" datasetB={data.visible.waterTemperature} />
+            <ChartBar.Root labelA="Air" datasetA={data.filtered.airTemperature} labelB="Water" datasetB={data.filtered.waterTemperature} />
           </Section>
         : ''}
-        {data.visible?.windDirection && data.visible?.windSpeed ?
+        {data.filtered?.windDirection && data.filtered?.windSpeed ?
           <Section>
             <Heading.Root as="h3" size="lg" uppercase center>{t('Wind')}</Heading.Root>
-            <ChartDial.Root unit="m/s" datasetA={data.visible.windDirection} datasetB={data.visible.windSpeed} />
+            <ChartDial.Root unit="m/s" datasetA={data.filtered.windDirection} datasetB={data.filtered.windSpeed} />
           </Section>
          : ''}
       </Main>

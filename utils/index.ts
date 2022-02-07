@@ -1,12 +1,12 @@
 import { searchArray, addToArray, removeFromArray } from './array';
-import { filterDatumByTime } from './datum';
+import { filterDatumByHour } from './datum';
 import { formatTime, formatDate, getSiblingMonths, isInDateRange } from './date';
 
 export {
   searchArray,
   addToArray,
   removeFromArray,
-  filterDatumByTime,
+  filterDatumByHour,
   formatTime,
   formatDate,
   getSiblingMonths,

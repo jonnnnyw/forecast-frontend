@@ -67,5 +67,5 @@ export interface Boundary {
 export interface Dataset {
   hours: Date[],
   metrics: { [index: string]: Serie },
-  visible: { [index: string]: Serie }
+  filtered: { [index: string]: Serie }
 }

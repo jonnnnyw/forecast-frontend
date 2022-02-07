@@ -7,7 +7,7 @@ import * as Menu from '../components/Menu';
 import * as Calendar from '../components/Calendar';
 import { formatDate, searchArray } from '../utils';
 
-const Filter = styled('div', {
+const Search = styled('div', {
   gap: '$16',
   display: 'grid',
   gridTemplateColumns: '1fr',
@@ -19,20 +19,20 @@ const Filter = styled('div', {
   }
 });
 
-type FilterProps = React.ComponentPropsWithoutRef<typeof Filter> & {
+type SearchProps = React.ComponentPropsWithoutRef<typeof Search> & {
   locations?: string[],
   defaultLocation?: string,
   defaultDate?: Date,
   maxDate?: Date,
   minDate?: Date,
-  onFilter: (date: Date, location: string) => void;
+  onSearch: (date: Date, location: string) => void;
 };
 
-const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, locations = [], defaultLocation, defaultDate, maxDate, minDate, onFilter, ...props }, ref) =>  {
+const Root = React.forwardRef<HTMLDivElement, SearchProps>(({ children, locations = [], defaultLocation, defaultDate, maxDate, minDate, onSearch, ...props }, ref) =>  {
 
   const stash = useRef<string>();
 
-  const [filter, setFilter] = useState({
+  const [query, setQuery] = useState({
     date: defaultDate ?? new Date(),
     location: defaultLocation
   });
@@ -42,50 +42,50 @@ const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, location
 
   const setDate = (date: Date) => {
     setActive('menu');
-    setFilter((current) => ({ ...current, date }));
+    setQuery((current) => ({ ...current, date }));
   }
 
   const setLocation = (location: string) => {
     setItems([]);
-    setFilter((current) => ({ ...current, location }));
+    setQuery((current) => ({ ...current, location }));
   }
 
   const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter((current) => ({ ...current, location: event.target.value }));
+    setQuery((current) => ({ ...current, location: event.target.value }));
   }
 
   const handleLocationFocus = () => {
-    if(filter.location) {
-      stash.current = filter.location;
-      setFilter((current) => ({ ...current, location: '' }));
+    if(query.location) {
+      stash.current = query.location;
+      setQuery((current) => ({ ...current, location: '' }));
     }
   }
 
   const handleLocationBlur = () => {
-    if(!filter.location && stash.current) {
-      setFilter((current) => ({ ...current, location: stash.current }));
+    if(!query.location && stash.current) {
+      setQuery((current) => ({ ...current, location: stash.current }));
       stash.current = '';
     }
   }
 
   useEffect(() => {
-    const items = (filter.location && !locations.includes(filter.location)) ?
-      searchArray(locations, filter.location, 5) : [];
+    const items = (query.location && !locations.includes(query.location)) ?
+      searchArray(locations, query.location, 5) : [];
     setItems(items);
-  }, [filter.location, locations]);
+  }, [query.location, locations]);
 
   useEffect(() => {
-    if(filter.location && filter.date) {
-      onFilter(filter.date, filter.location);
+    if(query.location && query.date) {
+      onSearch(query.date, query.location);
     }
-  }, [filter, onFilter]);
+  }, [query, onSearch]);
 
-  return (<Filter ref={ref} {...props}>
+  return (<Search ref={ref} {...props}>
     <Box.Root css={{ gridArea: 'location', position: 'relative' }}>
       <Label.Root htmlFor="location" css={{ marginBottom: '$8' }}>Location</Label.Root>
       <Input.Root 
         id="location" 
-        value={filter.location} 
+        value={query.location} 
         onChange={handleLocationChange} 
         onFocus={handleLocationFocus}
         onBlur={handleLocationBlur}
@@ -101,13 +101,13 @@ const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, location
     </Box.Root>
     <Box.Root css={{ gridArea: 'date', position: 'relative' }}>
       <Label.Root css={{ marginBottom: '$8' }} htmlFor="date">Date</Label.Root>
-      <Input.Root id="date" value={formatDate(filter.date)} onClick={() => setActive('calendar')} readOnly />
-      <Calendar.Root open={active === 'calendar'} initialValue={filter.date} max={maxDate} min={minDate} onClickDay={setDate} />
+      <Input.Root id="date" value={formatDate(query.date)} onClick={() => setActive('calendar')} readOnly />
+      <Calendar.Root open={active === 'calendar'} initialValue={query.date} max={maxDate} min={minDate} onClickDay={setDate} />
     </Box.Root>
     {children}
-  </Filter>);
+  </Search>);
 });
 
-Root.displayName = 'Filter';
+Root.displayName = 'Search';
 
 export { Root };

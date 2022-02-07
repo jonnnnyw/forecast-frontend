@@ -28,8 +28,8 @@ const Root = ({ children, hours, onTimeChange, ...props }: TimeScrollerProps) =>
 
   const handleTime = (hour: Date, isVisible: boolean) => {
     isVisible ? 
-      addToArray(times.current, hour.getTime()) :
-      removeFromArray(times.current, hour.getTime());
+      addToArray(times.current, hour.getUTCHours()) :
+      removeFromArray(times.current, hour.getUTCHours());
     
     if(onTimeChange) {
       onTimeChange(times.current);
