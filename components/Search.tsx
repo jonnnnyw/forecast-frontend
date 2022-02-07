@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { styled } from '../stitches.config';
 import * as Box from './Box';
 import * as Input from '../components/Input';
@@ -6,6 +6,7 @@ import * as Label from '../components/Label';
 import * as Menu from '../components/Menu';
 import * as Calendar from '../components/Calendar';
 import { formatDate, searchArray } from '../utils';
+import { useClickOutside } from '../hooks';
 
 const Search = styled('div', {
   gap: '$16',
@@ -39,6 +40,10 @@ const Root = React.forwardRef<HTMLDivElement, SearchProps>(({ children, location
 
   const [items, setItems] = useState<string[]>([]);
   const [active, setActive] = useState<'calendar' | 'menu'>('menu');
+
+  const calendar = useRef<HTMLElement>(null);
+
+  useClickOutside(calendar, useCallback(() => setActive('menu'), []));
 
   const setDate = (date: Date) => {
     setActive('menu');
@@ -102,7 +107,7 @@ const Root = React.forwardRef<HTMLDivElement, SearchProps>(({ children, location
     <Box.Root css={{ gridArea: 'date', position: 'relative' }}>
       <Label.Root css={{ marginBottom: '$8' }} htmlFor="date">Date</Label.Root>
       <Input.Root id="date" value={formatDate(query.date)} onClick={() => setActive('calendar')} readOnly />
-      <Calendar.Root open={active === 'calendar'} initialValue={query.date} max={maxDate} min={minDate} onClickDay={setDate} />
+      <Calendar.Root ref={calendar} open={active === 'calendar'} initialValue={query.date} max={maxDate} min={minDate} onClickDay={setDate} />
     </Box.Root>
     {children}
   </Search>);

@@ -18,23 +18,23 @@ const Root = styled('h1', {
       },
       sm: {
         fontSize: '$sm',
-        marginBottom: '$16',
+        marginBottom: '$32',
       },
       md: {
         fontSize: '$md',
-        marginBottom: '$16',
+        marginBottom: '$32',
       },
       lg: {
         fontSize: '$lg',
-        marginBottom: '$16',
+        marginBottom: '$32',
       },
       xl: {
         fontSize: '$xl',
-        marginBottom: '$16',
+        marginBottom: '$32',
       },
       xxl: {
         fontSize: '$xxl',
-        marginBottom: '$16',
+        marginBottom: '$32',
       },
     },
     center: {

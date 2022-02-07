@@ -84,7 +84,7 @@ type View = {
   prev: Date
 };
 
-const Root = ({ open = true, min, max, initialValue, onClickDay, ...props }: CalendarProps) =>  {
+const Root =  React.forwardRef<HTMLDivElement, CalendarProps>(({ open = true, min, max, initialValue, onClickDay, ...props }, ref) =>  {
 
   const [day, setDay] = useState(initialValue ?? new Date());
   const [range, setRange] = useState<Date[]>([]);
@@ -124,7 +124,7 @@ const Root = ({ open = true, min, max, initialValue, onClickDay, ...props }: Cal
   }, [view]);
 
   return (
-    <Calendar open={open} {...props}>
+    <Calendar ref={ref} open={open} {...props}>
       { isInDateRange(view.prev, min) ?
           <Button css={{ gridArea: 'prev' }} onClick={() => handleView(view.prev)}>
            {view.prev.toLocaleDateString([], { month: 'short', timeZone: 'UTC' })}
@@ -147,7 +147,7 @@ const Root = ({ open = true, min, max, initialValue, onClickDay, ...props }: Cal
       </Days>
     </Calendar>
    );
-};
+});
 
 Root.displayName = 'Calendar';
 
