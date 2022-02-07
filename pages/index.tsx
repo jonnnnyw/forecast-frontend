@@ -171,10 +171,10 @@ const Home = ({ points }: HomeProps) => {
             </Label>
           }
         </TimeScroller.Root>
-        {data.filtered?.waveHeight ?
+        {data.filtered?.swellHeight ?
           <Section css={{ height: '60rem', maxWidth: '100vw' }}>
-            <Heading.Root as="h3" size="lg" uppercase center>{t('Wave Height')}</Heading.Root>
-            <ChartLine.Root dataset={data.filtered.waveHeight} />
+            <Heading.Root as="h3" size="lg" uppercase center>{t('Swell Height')}</Heading.Root>
+            <ChartLine.Root dataset={data.filtered.swellHeight} />
           </Section>
         : ''}
         {data.filtered?.airTemperature && data.filtered?.waterTemperature ?

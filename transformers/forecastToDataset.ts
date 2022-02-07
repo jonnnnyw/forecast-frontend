@@ -5,14 +5,14 @@ import { Forecast, Dataset } from '../types';
 export const forecastToDataset = (forecast: Forecast): Dataset => {
   const hours = forecast.hours.map((hour) => new Date(hour.time));
       
-  const waveHeight = hoursToSerie(forecast.hours, 'waveHeight', 'meteo');
-  const airTemperature = hoursToSerie(forecast.hours, 'airTemperature', 'noaa');
-  const waterTemperature = hoursToSerie(forecast.hours, 'waterTemperature', 'noaa');
-  const windDirection = hoursToSerie(forecast.hours, 'windDirection', 'noaa');
-  const windSpeed = hoursToSerie(forecast.hours, 'windSpeed', 'noaa');
+  const swellHeight = hoursToSerie(forecast.hours, 'swellHeight', 'sg');
+  const airTemperature = hoursToSerie(forecast.hours, 'airTemperature', 'sg');
+  const waterTemperature = hoursToSerie(forecast.hours, 'waterTemperature', 'sg');
+  const windDirection = hoursToSerie(forecast.hours, 'windDirection', 'sg');
+  const windSpeed = hoursToSerie(forecast.hours, 'windSpeed', 'sg');
 
   const metrics = { 
-    waveHeight, 
+    swellHeight, 
     airTemperature, 
     waterTemperature, 
     windSpeed, 

@@ -27,6 +27,7 @@ export interface Meta {
 export interface Hours {
   readonly time: string;
   readonly waveHeight?: Sources;
+  readonly swellHeight?: Sources;
   readonly airTemperature?: Sources;
   readonly waterTemperature?: Sources;
   readonly windDirection?: Sources;
@@ -34,6 +35,7 @@ export interface Hours {
 }
 
 export interface Sources {
+  readonly sg?: string | number;
   readonly smhi?: string | number;
   readonly noaa?: string | number;
   readonly meteo?: string | number;
