@@ -59,7 +59,7 @@ const Main = styled('main', {
 });
 
 const Section = styled('section', {
-  padding: '$32'
+  padding: '$64 $32'
 });
 
 const Footer = styled('footer', {
