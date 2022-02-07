@@ -12,6 +12,7 @@ import * as Image from '../components/Image';
 import * as Filter from '../components/Filter';
 import * as ChartBar from '../components/ChartBar';
 import * as ChartLine from '../components/ChartLine';
+import * as ChartDial from '../components/ChartDial';
 import * as TimeScroller from '../components/TimeScroller';
 
 import { Point, Query, Serie } from '../types';
@@ -135,11 +136,13 @@ const Home = ({ points }: HomeProps) => {
       const waveHeight = hoursToSerie(forecast.hours, 'waveHeight', 'meteo');
       const airTemperature = hoursToSerie(forecast.hours, 'airTemperature', 'noaa');
       const waterTemperature = hoursToSerie(forecast.hours, 'waterTemperature', 'noaa');
+      const windDirection = hoursToSerie(forecast.hours, 'windDirection', 'noaa');
+      const windSpeed = hoursToSerie(forecast.hours, 'windSpeed', 'noaa');
 
       setData({
         hours,
-        metrics: { waveHeight, airTemperature, waterTemperature },
-        visible: { waveHeight, airTemperature, waterTemperature }
+        metrics: { waveHeight, airTemperature, waterTemperature, windSpeed, windDirection },
+        visible: { waveHeight, airTemperature, waterTemperature, windSpeed, windDirection }
       });
     }
   }, [forecast]);
@@ -178,14 +181,17 @@ const Home = ({ points }: HomeProps) => {
           </Section>
         : ''}
         {data.visible?.airTemperature && data.visible?.waterTemperature ?
-          <Section>
+          <Section css={{ backgroundColor: '$primary' }}>
             <Heading.Root as="h3" size="lg" uppercase center>{t('Temperature')}</Heading.Root>
             <ChartBar.Root labelA="Air" datasetA={data.visible.airTemperature} labelB="Water" datasetB={data.visible.waterTemperature} />
           </Section>
         : ''}
-        <Section>
-          <Heading.Root as="h3" size="lg" uppercase center>{t('Wind')}</Heading.Root>
-        </Section>
+        {data.visible?.windDirection && data.visible?.windSpeed ?
+          <Section>
+            <Heading.Root as="h3" size="lg" uppercase center>{t('Wind')}</Heading.Root>
+            <ChartDial.Root unit="m/s" datasetA={data.visible.windDirection} datasetB={data.visible.windSpeed} />
+          </Section>
+         : ''}
       </Main>
       <Footer>{t('Forecast')}</Footer>
     </Layout>

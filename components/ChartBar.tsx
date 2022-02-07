@@ -19,6 +19,7 @@ const Dataset = styled('li', {
     textAlign: 'center',
     flexGrow: '1',
     'time': {
+        opacity: '0.3',
         marginTop: '$16'
     }
 });
@@ -76,12 +77,16 @@ type ChartBarProps = React.ComponentPropsWithoutRef<typeof Chart> & {
 
 const Root = ({ datasetA, datasetB, labelA, labelB, ...props }: ChartBarProps) => {
 
-    const [dataset, setDataset] = useState<Range>({ data: [], min: 0, max: 100, range: 100 });
+    const [dataset, setDataset] = useState<Range>();
 
     useEffect(() => {
         const dataset = serieToRange(datasetA, datasetB);
         setDataset(dataset);
     }, [datasetA, datasetB]);
+
+    if(!dataset) {
+        return null;
+    }
 
     return (
         <Chart {...props}>

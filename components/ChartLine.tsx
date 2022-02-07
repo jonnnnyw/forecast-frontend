@@ -32,7 +32,7 @@ const Root = ({ dataset }: ChartLineProps) => (
       theme={{
         axis: { ticks: { text: { fontSize: 14 } } },
         grid: { line: { stroke: 'rgba(255,255,255,.1)' } },
-        textColor: 'rgb(255,227,194)',
+        textColor: 'rgb(255,227,194,.5)',
         fontFamily: 'Merriweather Sans, Tahoma, Arial, sans-serif',
         fontSize: 14,
       }}
