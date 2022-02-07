@@ -16,8 +16,8 @@ export const getSiblingMonths = (date: Date): DateRange => {
   const prev = new Date(date.getTime()); 
   const next = new Date(date.getTime()); 
 
-  next.setMonth(date.getUTCMonth() + 1);
-  prev.setMonth(date.getUTCMonth() - 1);
+  next.setUTCMonth(date.getUTCMonth() + 1);
+  prev.setUTCMonth(date.getUTCMonth() - 1);
 
   return { prev, next };
 }

@@ -55,16 +55,21 @@ const Day = styled('button', {
     backgroundColor: '$highlight',
   },
   '&[disabled]': {
-    opacity: '0.3'
+    textDecoration: 'line-through'
   },
   variants: {
     active: {
       true: { backgroundColor: '$highlight' },
       false: { backgroundColor: 'none' }
+    },
+    current: {
+      true: { oapcity: 1 },
+      false: { opacity: .3 }
     }
   },
   defaultVariants: {
-    active: false
+    active: false,
+    current: true
   }
 });
 
@@ -125,12 +130,18 @@ const Root =  React.forwardRef<HTMLDivElement, CalendarProps>(({ open = true, mi
 
   useEffect(() => {
     const range: Date[] = [];
-    const start = new Date(view.current.getTime());
-    start.setDate(1);
 
-    while(view.current.getUTCMonth() == start.getUTCMonth()) {
+    const start = new Date(view.current.getTime());
+    start.setUTCDate(1);
+    start.setUTCDate(start.getUTCDate() - (start.getUTCDay() + 6) % 7);
+
+    const end = new Date(view.current.getTime());
+    end.setUTCMonth(end.getUTCMonth() + 1);
+    end.setUTCDate(1);
+
+    while(start.getTime() < end.getTime()) {
       range.push(new Date(start.getTime()));
-      start.setDate(start.getDate() + 1);
+      start.setUTCDate(start.getUTCDate() + 1);
     }
 
     setRange(range);
@@ -158,7 +169,7 @@ const Root =  React.forwardRef<HTMLDivElement, CalendarProps>(({ open = true, mi
       </Weekdays>
       <Days id="calendar">
         {range.map((date, key) => (
-          <Day key={key} onClick={() => handleDate(date)} disabled={!isInDateRange(date, min, max)} active={date.getTime() === day.getTime()}>
+          <Day key={key} onClick={() => handleDate(date)} disabled={!isInDateRange(date, min, max)} current={date.getUTCMonth() === view.current.getUTCMonth()} active={date.getTime() === day.getTime()}>
             {date.toLocaleDateString([], { day: '2-digit', timeZone: 'UTC' })}
           </Day>
         ))}
