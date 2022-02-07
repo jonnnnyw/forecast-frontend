@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import useTranslation from 'next-translate/useTranslation';
 import { useForecast, useDebounce } from '../hooks';
-import { hoursToSerie } from '../transformers/hoursToSerie';
+import { forecastToDataset } from '../transformers';
 import { filterDatumByTime, formatDate } from '../utils';
 import { styled, themes } from '../stitches.config';
 import * as BaseLabel from '@radix-ui/react-label';
@@ -15,9 +15,12 @@ import * as ChartLine from '../components/ChartLine';
 import * as ChartDial from '../components/ChartDial';
 import * as TimeScroller from '../components/TimeScroller';
 
-import { Point, Query, Serie } from '../types';
+import { Point, Query, Dataset } from '../types';
 
 import globalStyles from '../styles';
+
+const maxDate = new Date();
+maxDate.setDate(maxDate.getDate() + 7);
 
 const Layout = styled(Box.Root, {
   color: '$contrast',
@@ -88,26 +91,14 @@ type HomeProps = {
   points: Point[]
 };
 
-type Data = {
-  hours: Date[],
-  metrics: { [index: string]: Serie },
-  visible: { [index: string]: Serie }
-};
-
 const Home = ({ points }: HomeProps) => {
   globalStyles();
 
   const { t } = useTranslation('home');
 
-  const [data, setData] = useState<Data>({ hours: [], metrics: {}, visible: {} });
   const [locations, setLocations] = useState<string[]>([]);
-
-  const [query, setQuery] = useState<Query>({
-    name: 'Raglan',
-    date: new Date(),
-    lat: 58.7984,
-    lng: 17.8081
-  });
+  const [query, setQuery] = useState<Query>({ ...points[0], date: new Date() });
+  const [data, setData] = useState<Dataset>({ hours: [], metrics: {}, visible: {} });
 
   const { forecast, isLoading, isError } = useForecast(query);
 
@@ -124,26 +115,15 @@ const Home = ({ points }: HomeProps) => {
     filterData(times, data);
   };
 
-  const filterData = useDebounce((times: number[], data: Data) => {
+  const filterData = useDebounce((times: number[], data: Dataset) => {
     const visible = filterDatumByTime(times, data.metrics);
-    setData({  ...data, visible });
+    setData({ ...data, visible });
   }, 500, { leading: false });
   
   useEffect(() => {
-    if(forecast && forecast.hours.length) {
-      const hours = forecast.hours.map((hour) => new Date(hour.time));
-      
-      const waveHeight = hoursToSerie(forecast.hours, 'waveHeight', 'meteo');
-      const airTemperature = hoursToSerie(forecast.hours, 'airTemperature', 'noaa');
-      const waterTemperature = hoursToSerie(forecast.hours, 'waterTemperature', 'noaa');
-      const windDirection = hoursToSerie(forecast.hours, 'windDirection', 'noaa');
-      const windSpeed = hoursToSerie(forecast.hours, 'windSpeed', 'noaa');
-
-      setData({
-        hours,
-        metrics: { waveHeight, airTemperature, waterTemperature, windSpeed, windDirection },
-        visible: { waveHeight, airTemperature, waterTemperature, windSpeed, windDirection }
-      });
+    if(forecast) {
+      const data = forecastToDataset(forecast);
+      setData(data);
     }
   }, [forecast]);
 
@@ -163,7 +143,7 @@ const Home = ({ points }: HomeProps) => {
         <Title uppercase center>
           {t('Forecast')}
         </Title>
-        <Filter.Root locations={locations} defaultDate={query.date} defaultLocation={query.name} onFilter={handleQuery} />
+        <Filter.Root locations={locations} defaultDate={query.date} maxDate={maxDate} defaultLocation={query.name} onFilter={handleQuery} />
       </Header>
       <Main>
         <TimeScroller.Root id="time" hours={data.hours} onTimeChange={handleTime}>

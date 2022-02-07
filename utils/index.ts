@@ -1,6 +1,6 @@
 import { searchArray, addToArray, removeFromArray } from './array';
 import { filterDatumByTime } from './datum';
-import { formatTime, formatDate } from './date';
+import { formatTime, formatDate, getSiblingMonths, isInDateRange } from './date';
 
 export {
   searchArray,
@@ -8,5 +8,7 @@ export {
   removeFromArray,
   filterDatumByTime,
   formatTime,
-  formatDate
+  formatDate,
+  getSiblingMonths,
+  isInDateRange
 }

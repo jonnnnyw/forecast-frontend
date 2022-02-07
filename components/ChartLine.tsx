@@ -6,8 +6,13 @@ export interface ChartLineProps {
   dataset: Serie;
 }
 
-const Root = ({ dataset }: ChartLineProps) => (
-    <ResponsiveLine
+const Root = ({ dataset }: ChartLineProps) => {
+
+    if(!dataset.data.length) {
+      return null;
+    }
+    
+    return (<ResponsiveLine
       data={[dataset]}
       xScale={{ type: 'time', format: 'native', precision: 'hour' }}
       yScale={{ type: 'linear', nice: true, min: 'auto', max: 'auto' }}
@@ -36,8 +41,8 @@ const Root = ({ dataset }: ChartLineProps) => (
         fontFamily: 'Merriweather Sans, Tahoma, Arial, sans-serif',
         fontSize: 14,
       }}
-    />
-);
+    />);
+};
 
 Root.displayName = 'ChartLine';
 

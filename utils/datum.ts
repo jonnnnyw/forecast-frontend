@@ -9,6 +9,11 @@ type Data = {
  * by time.
  */
 export const filterDatumByTime = (times: number[], data: Data): Data => {
+
+  if(!times.length) {
+    return data;
+  }
+
   const filtered: Data = {};
   for (const [key, serie] of Object.entries(data)) {
     filtered[key] = {
@@ -16,5 +21,6 @@ export const filterDatumByTime = (times: number[], data: Data): Data => {
       data: serie.data.filter(({ x }) => times.includes(x.getTime()))
     }
   }
+  
   return filtered;
 }

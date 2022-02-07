@@ -5,8 +5,7 @@ import * as Input from '../components/Input';
 import * as Label from '../components/Label';
 import * as Menu from '../components/Menu';
 import * as Calendar from '../components/Calendar';
-
-import { searchArray } from '../utils/array';
+import { formatDate, searchArray } from '../utils';
 
 const Filter = styled('div', {
   gap: '$16',
@@ -24,10 +23,12 @@ type FilterProps = React.ComponentPropsWithoutRef<typeof Filter> & {
   locations?: string[],
   defaultLocation?: string,
   defaultDate?: Date,
+  maxDate?: Date,
+  minDate?: Date,
   onFilter: (date: Date, location: string) => void;
 };
 
-const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, locations = [], defaultLocation, defaultDate, onFilter, ...props }, ref) =>  {
+const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, locations = [], defaultLocation, defaultDate, maxDate, minDate, onFilter, ...props }, ref) =>  {
 
   const stash = useRef<string>();
 
@@ -100,8 +101,8 @@ const Root = React.forwardRef<HTMLDivElement, FilterProps>(({ children, location
     </Box.Root>
     <Box.Root css={{ gridArea: 'date', position: 'relative' }}>
       <Label.Root css={{ marginBottom: '$8' }} htmlFor="date">Date</Label.Root>
-      <Input.Root id="date" value={filter.date.toLocaleDateString()} onClick={() => setActive('calendar')} readOnly />
-      <Calendar.Root open={active === 'calendar'} defaultValue={filter.date} onClickDay={setDate} />
+      <Input.Root id="date" value={formatDate(filter.date)} onClick={() => setActive('calendar')} readOnly />
+      <Calendar.Root open={active === 'calendar'} initialValue={filter.date} max={maxDate} min={minDate} onClickDay={setDate} />
     </Box.Root>
     {children}
   </Filter>);

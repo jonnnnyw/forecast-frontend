@@ -1,6 +1,11 @@
 import { Serie, Range } from '../types';
 
-export const serieToRange = (serieA: Serie, serieB: Serie): Range => {
+export const serieToRange = (serieA: Serie, serieB: Serie): Range | null => {
+
+  if(!serieA.data.length || !serieB.data.length) {
+    return null;
+  }
+
   const data: { a: number, b: number, time: Date }[] = [];
 
   const minA = serieA.data.reduce((prev, next) => next.y < prev.y ? next : prev);

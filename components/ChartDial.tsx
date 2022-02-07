@@ -42,7 +42,7 @@ type ChartDialProps = React.ComponentPropsWithoutRef<typeof Chart> & {
 
 const Root = ({ datasetA, datasetB, unit, ...props }: ChartDialProps) => {
 
-    const [dataset, setDataset] = useState<Range>();
+    const [dataset, setDataset] = useState<Range | null>(null);
 
     useEffect(() => {
         const dataset = serieToRange(datasetA, datasetB);

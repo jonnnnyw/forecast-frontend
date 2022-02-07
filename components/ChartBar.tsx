@@ -77,7 +77,7 @@ type ChartBarProps = React.ComponentPropsWithoutRef<typeof Chart> & {
 
 const Root = ({ datasetA, datasetB, labelA, labelB, ...props }: ChartBarProps) => {
 
-    const [dataset, setDataset] = useState<Range>();
+    const [dataset, setDataset] = useState<Range | null>(null);
 
     useEffect(() => {
         const dataset = serieToRange(datasetA, datasetB);

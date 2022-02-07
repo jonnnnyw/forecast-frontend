@@ -63,3 +63,9 @@ export interface Boundary {
   max: number;
   range: number;
 }
+
+export interface Dataset {
+  hours: Date[],
+  metrics: { [index: string]: Serie },
+  visible: { [index: string]: Serie }
+}
