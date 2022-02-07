@@ -183,6 +183,10 @@ export async function getStaticProps() {
   const result = await fetch(`${process.env.NEXT_PUBLIC_ENDPOINT}/points.json`);
   const points: Point[] = await result.json();
 
+  if(!points.length) {
+    points.push({ name: 'Raglan', lat: 58.7984, lng: 17.8081 });
+  }
+
   return {
     props: {
       points,
