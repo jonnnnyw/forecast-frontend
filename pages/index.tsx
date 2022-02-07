@@ -201,7 +201,7 @@ export async function getStaticProps() {
   const points: Point[] = await result.json();
 
   if(!points.length) {
-    points.push({ name: 'Raglan', lat: 58.7984, lng: 17.8081 });
+    points.push({ name: 'Raglan', lat: 37.8232, lng: 174.8906 });
   }
 
   return {
