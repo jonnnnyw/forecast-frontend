@@ -6,6 +6,7 @@ import { forecastToDataset } from '../transformers';
 import { filterDatumByTime, formatDate } from '../utils';
 import { styled, themes } from '../stitches.config';
 import * as BaseLabel from '@radix-ui/react-label';
+import { Bars } from  'react-loader-spinner';
 import * as Heading from '../components/Heading';
 import * as Box from '../components/Box';
 import * as Image from '../components/Image';
@@ -80,7 +81,11 @@ const Label = styled(BaseLabel.Root, {
   display: 'block',
   marginTop: '$4',
   textAlign: 'center',
-  '> span': {
+  minHeight: '5rem',
+  'svg': {
+    margin: '0 auto $8 auto'
+  },
+  'span': {
     fontSize: '$sm', 
     marginBottom: '$4',
     display: 'block', 
@@ -147,12 +152,18 @@ const Home = ({ points }: HomeProps) => {
       </Header>
       <Main>
         <TimeScroller.Root id="time" hours={data.hours} onTimeChange={handleTime}>
-          <Label htmlFor="time">
-            <Box.Root as="span">{query.name}</Box.Root>
-            <time dateTime={query.date.toLocaleDateString()}>
-              {formatDate(query.date)}
-            </time>
-          </Label>
+          { isLoading || isError ?
+            <Label css={{ textTransform: 'uppercase', color: isError ? 'red' : '$contrast' }}>
+                <Bars height="20" width="300" color="rgb(102,194,165)" ariaLabel="loading" />
+                {isLoading ? t('Loading') : t('An error occurred')}
+            </Label> :
+            <Label htmlFor="time">
+              <Box.Root as="span">{query.name}</Box.Root>
+              <time dateTime={query.date.toLocaleDateString()}>
+                {formatDate(query.date)}
+              </time>
+            </Label>
+          }
         </TimeScroller.Root>
         {data.visible?.waveHeight ?
           <Section css={{ height: '40rem', maxWidth: '100vw' }}>

@@ -2,5 +2,7 @@
   "Forecast": "Forecast",
   "Wave Height": "Wave Height",
   "Temperature": "Temperature",
-  "Wind": "Wind"
+  "Wind": "Wind",
+  "Loadng": "Loading",
+  "An error occurred": "An error occured"
 }
