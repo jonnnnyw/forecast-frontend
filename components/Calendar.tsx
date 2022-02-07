@@ -3,11 +3,9 @@ import { styled } from '../stitches.config';
 import * as BaseLabel from '@radix-ui/react-label';
 import { getSiblingMonths, isInDateRange } from '../utils';
 
-import { max } from 'lodash';
-
 const Calendar = styled('div', {
   zIndex: 3,
-  gap: '$8 $4',
+  gap: '$4',
   width: '100%',
   padding: '$16',
   position: 'absolute',
@@ -16,13 +14,29 @@ const Calendar = styled('div', {
   borderRadius: '$4',
   backgroundColor: '$contrast',
   gridTemplateColumns: 'repeat(3, 1fr)',
-  gridTemplateAreas: '"prev year next" "days days days"',
+  gridTemplateAreas: '"prev year next" "weekdays weekdays weekdays" "days days days"',
   variants: {
     open: {
       false: { display: 'none' },
       true: { display: 'grid' }
     }
   }
+});
+
+const Weekdays = styled('ul', {
+  gap: '$4',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(7, 1fr)',
+  gridArea: 'weekdays',
+  listStyle: 'none',
+  textTransform: 'uppercase',
+  fontSize: '$sm',
+  padding: 0,
+  margin: 0
+});
+
+const Weekday = styled('li', {
+  padding: '$4',
 });
 
 const Days = styled('nav', {
@@ -34,7 +48,6 @@ const Days = styled('nav', {
 
 const Day = styled('button', {
   all: 'unset',
-  flex: '0 0 14.%',
   padding: '$8',
   borderRadius: '$4',
   '&:not([disabled]):hover': {
@@ -138,6 +151,11 @@ const Root =  React.forwardRef<HTMLDivElement, CalendarProps>(({ open = true, mi
           {view.next.toLocaleDateString([], { month: 'short', timeZone: 'UTC' })}
         </Button>
       : ''}
+      <Weekdays>
+        {range.slice(0, 7).map((date) => (
+          <Weekday key={date.getUTCDay()}>{date.toLocaleDateString([], { weekday: 'short', timeZone: 'UTC' })}</Weekday>
+        ))}
+      </Weekdays>
       <Days id="calendar">
         {range.map((date, key) => (
           <Day key={key} onClick={() => handleDate(date)} disabled={!isInDateRange(date, min, max)} active={date.getTime() === day.getTime()}>
