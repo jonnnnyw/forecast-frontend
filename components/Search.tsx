@@ -41,7 +41,7 @@ const Root = React.forwardRef<HTMLDivElement, SearchProps>(({ children, location
   const [items, setItems] = useState<string[]>([]);
   const [active, setActive] = useState<'calendar' | 'menu'>('menu');
 
-  const calendar = useRef<HTMLElement>(null);
+  const calendar = useRef<HTMLDivElement>(null);
 
   useClickOutside(calendar, useCallback(() => setActive('menu'), []));
 
