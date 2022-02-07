@@ -93,7 +93,7 @@ export const themes = [
       colors: {
         primary: 'rgb(0,30,40)',
         secondary: 'rgb(0,26,34)',
-        tertiary: 'rgb(0,30,40,.9)',
+        tertiary: 'rgb(0,30,40,.98)',
         contrast: 'rgb(247,222,199)',
         accent: 'rgb(102,194,165)',
         highlight: 'rgb(102,194,165)',

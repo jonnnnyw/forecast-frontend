@@ -24,7 +24,7 @@ type TimeScrollerProps = React.ComponentPropsWithoutRef<typeof TimeScroller> & {
 const Root = ({ children, hours, onTimeChange, ...props }: TimeScrollerProps) =>  {
 
   const times = useRef<number[]>([]);
-  const [scale, setScale] = useState<number>(10);
+  const [scale, setScale] = useState<number>(20);
 
   const handleTime = (hour: Date, isVisible: boolean) => {
     isVisible ? 
@@ -37,7 +37,7 @@ const Root = ({ children, hours, onTimeChange, ...props }: TimeScrollerProps) =>
   };
 
   const handleScale = useThrottle((values: number[]) => {
-    setScale(values[0] ?? 10);
+    setScale(values[0] ?? 20);
   }, 100);
 
   if(!hours.length) {
@@ -56,7 +56,7 @@ const Root = ({ children, hours, onTimeChange, ...props }: TimeScrollerProps) =>
         ))}
       </Carousel.Root>
       <Box.Root css={{ padding: '$16', width: '100vw', margin: '0 auto', '@bp2': { width: '50vw' } }}>
-        <Slider.Root id="time" min={10} max={25} defaultValue={[scale]} onValueChange={handleScale} />
+        <Slider.Root id="time" min={10} max={30} defaultValue={[scale]} onValueChange={handleScale} />
         {children}
       </Box.Root>
     </TimeScroller>
